@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Philolexian Resolution Generator</title>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <style>
+      body {
+        padding: 50px;
+        background-color: #ebf6f8;
+        font-family: Helvetica, arial, sans-serif;
+      }
+      img#logo {
+        width: 150px;
+        display: block;
+      }
+      ul li {
+        line-height: 1.5em;
+      }
+      ul li a {
+        
+      }
+    </style>
+    <script>
+      function gen_items() {
+        $.getJSON( "gen.json", function( data ) {
+          var items = [];
+          $.each( data, function( key, val ) {
+            items.push( "<li id='" + key + "'>R: " + val + "</li>" );
+          });
+ 
+          $('#generated').html(items.join(""));
+        });
+      }
+    
+      $(document).ready(function() {
+        gen_items();
+        
+        $("#getgen").click(function() {
+          gen_items();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <img id="logo" src="static/logo.png">
+        
+    <h2>Click the best resolution:</h2>
+    <ul id="resolutions">
+      <div id="generated">
+      </div>
+      <li><a id="getgen" href="#">These aren't good. You're a stupid robot.</a></li>
+      <li>Hotpants, hotpants, hotpants.</li>
+    </div>
+  </body>
+</html>
