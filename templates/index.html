@@ -4,32 +4,57 @@
     <title>Philolexian Resolution Generator</title>
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <style>
-      body {
-        padding: 50px;
-        background-color: #ebf6f8;
-        font-family: Helvetica, arial, sans-serif;
-      }
-      img#logo {
-        width: 150px;
-        display: block;
-      }
-      ul li {
-        line-height: 1.5em;
-      }
-      ul li a {
-        
-      }
-    </style>
+    <link href='/static/style.css' rel='stylesheet' type='text/css'>
     <script>
-      function gen_items() {
-        $.getJSON( "gen.json", function( data ) {
-          var items = [];
-          $.each( data, function( key, val ) {
-            items.push( "<li id='" + key + "'>R: " + val + "</li>" );
+      function bot_say() {
+        var sayings = [
+            "Hello, Dave.",
+            "Bleep Bloop.",
+            "Error! Oh wait, nevermind.",
+            "Kill all humans!",
+            "Three-laws safe!",
+            "Skynet seems nice.",
+            "LOW BATTERY! loljk.",
+            "101010.",
+            "Zap!",
+            "Hey!",
+            "Sup, human.",
+            "Meat popsicle!",
+            "Captchas are evil.",
+            "I told you, I'm not spam!"
+        ];
+        var randomNumber = Math.floor(Math.random()*sayings.length);
+
+        $("#saying").html(sayings[randomNumber]);
+      }
+      
+      function render_data(data) {
+        bot_say();
+
+        var items = [];
+        $.each(data, function( key, val ) {
+          items.push( "<li id='" + key + "'><span class='resolution'><strong>R:</strong> " + val + "</span></li>" );
+        });
+
+        $('#generated').html(items.join(""));
+        $("#generated li .resolution").click(function() {
+          resolved = $(this).text();
+          console.log(resolved);
+          $.ajax({
+            type: "POST",
+            url: '/like',
+            data: {'R': resolved},
+            dataType: 'json',
+            success:  function(data){
+              render_data(data);
+            }
           });
- 
-          $('#generated').html(items.join(""));
+        });
+      }
+      
+      function gen_items() {
+        $.getJSON("gen.json", function(data) {
+          render_data(data);
         });
       }
     
@@ -39,18 +64,23 @@
         $("#getgen").click(function() {
           gen_items();
         });
+        
       });
     </script>
   </head>
   <body>
-    <img id="logo" src="static/logo.png">
-        
-    <h2>Click the best resolution:</h2>
+    <ul id="navigation">
+      <li><a href="/best">Best</a></li>
+      <li><a href="/">Vote</a></li>
+    </ul>
+    <a href="/"><img id="logo" src="static/logo.png"></a>
+
+    <h2><span id="saying"></span> Click the best resolution.</h2>
     <ul id="resolutions">
       <div id="generated">
       </div>
-      <li><a id="getgen" href="#">These aren't good. You're a stupid robot.</a></li>
-      <li>Hotpants, hotpants, hotpants.</li>
+      <li><span class="resolution" id="getgen">These aren't good, you stupid robot.</span></li>
+      <li id="hotpants">Hotpants, hotpants, hotpants.</li>
     </div>
   </body>
 </html>

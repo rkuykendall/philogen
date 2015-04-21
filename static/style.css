@@ -1,0 +1,52 @@
+body {
+    padding: 25px;
+    background-color: #ecf7f9;
+    font-family: Helvetica, arial, sans-serif;
+}
+
+img#logo {
+    width: 150px;
+}
+ul li {
+    font-size: 21px;
+    line-height: 32px;
+    margin-bottom: 14px;
+    list-style-type: square;
+}
+ul li .resolution {
+    color: #474969;
+    background-color: white;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.score {
+    color: white;
+}
+
+#hotpants {
+    color: white;
+}
+
+#navigation, #navigation li {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+#navigation li a {
+    font-style: italic;
+    display: block;
+    font-size: 30px;
+    padding: 40px 5px;
+    width: 90px;
+    height: 20px;
+    margin: 20px;
+    float: right;
+    text-decoration: none;
+    border-radius: 50px;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: rgba(170, 221, 239, 0.2);
+}

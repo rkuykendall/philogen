@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Philolexian Resolution Generator</title>
+    <link href='/static/style.css' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+    <ul id="navigation">
+      <li><a href="/best">Best</a></li>
+      <li><a href="/">Vote</a></li>
+    </ul>
+    <a href="/"><img id="logo" src="static/logo.png"></a>
+
+    <h2>Best resolutions.</h2>
+    <ul id="resolutions">
+      {% for r in resolutions %}
+      <li><span class="resolution"><strong>R: </strong> {{ r.resolved }}</span> <span class="score">[{{ r.score }}]</span></li>
+      {% endfor %}
+      <li id="hotpants">Hotpants, hotpants, hotpants.</li>
+    </div>
+  </body>
+</html>
