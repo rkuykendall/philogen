@@ -32,7 +32,8 @@ class PhiloGen:
             self.titles = list(
                 set(self.titles).union(set(read_data.split("\n"))))
                 
-        print "Titles: {}".format(len(self.titles))
+        print "Creating generator with {} sources and lookback {}".format(
+            len(self.titles), lookback)
 
         # Generate map in the form:
         # (word1) -> (word2) -> (occurences of word2 after word1)
@@ -65,10 +66,12 @@ class PhiloGen:
                 next_word = sample(word1_map.items())
 
             sentence = ' '.join(sentence)
+            sent_comp = sentence.lower().translate(None, string.punctuation)
             flag = True
             for title in self.titles:
                 #Prune titles that are substrings of actual titles
-                if sentence.lower() in title.lower():
+                title_comp = title.lower().translate(None, string.punctuation)
+                if sent_comp in title_comp:
                     flag = False
                     break
             if flag:

@@ -69,6 +69,8 @@ def like(resolved):
         r.score += 1
     else:
         r = Resolution(resolved)
+        
+    print "Like {}: {}".format(r.score, r.resolved)
     
     db.session.add(r)
     db.session.commit()
