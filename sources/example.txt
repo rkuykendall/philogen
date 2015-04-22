@@ -1,0 +1,8 @@
+Place data sources in this folder like this.
+With a single source text on each line.
+If you like, you can have multiple text files for organization.
+Any text documents in this folder will be imported.
+The better the dataset, the better the results you will get.
+Just having 10 lined to work from won't produce anything good.
+Try to find a way to gather at least a few hundred.
+You also probably want to keep them medium length. Not too much longer than this, but also not just a few words.
