@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Philolexian Resolution Generator</title>
+    <title>Philolexian Resolution Generator - Best</title>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <link href='/static/style.css' rel='stylesheet' type='text/css'>
+    <script src="/static/script.js"></script>
+    <script>
+      $(document).ready(function() {
+        bot_say();
+      });
+    </script>
   </head>
   <body>
     <ul id="navigation">
       <li><a href="/best">Best</a></li>
-      <li><a href="/">Vote</a></li>
+      <li><a href="/tournament">Vote</a></li>
+      <li><a id="new" href="/">New</a></li>
     </ul>
     <a href="/"><img id="logo" src="static/logo.png"></a>
 
-    <h2>Best resolutions.</h2>
+    <h2><span id="saying"></span> Here's the best resolutions:</h2>
     <ul id="resolutions">
       {% for r in resolutions %}
       <li><span class="resolution"><strong>R: </strong> {{ r.resolved }}</span> <span class="score">[{{ r.score }}]</span></li>

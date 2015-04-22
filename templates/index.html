@@ -5,29 +5,8 @@
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <link href='/static/style.css' rel='stylesheet' type='text/css'>
-    <script>
-      function bot_say() {
-        var sayings = [
-            "Hello, Dave.",
-            "Bleep Bloop.",
-            "Error! Oh wait, nevermind.",
-            "Kill all humans!",
-            "Three-laws safe!",
-            "Skynet seems nice.",
-            "LOW BATTERY! loljk.",
-            "101010.",
-            "Zap!",
-            "Hey!",
-            "Sup, human.",
-            "Meat popsicle!",
-            "Captchas are evil.",
-            "I told you, I'm not spam!"
-        ];
-        var randomNumber = Math.floor(Math.random()*sayings.length);
-
-        $("#saying").html(sayings[randomNumber]);
-      }
-      
+    <script src="/static/script.js"></script>
+    <script>      
       function render_data(data) {
         bot_say();
 
@@ -42,7 +21,7 @@
           console.log(resolved);
           $.ajax({
             type: "POST",
-            url: '/like',
+            url: '{{ url }}',
             data: {'R': resolved},
             dataType: 'json',
             success:  function(data){
@@ -53,7 +32,7 @@
       }
       
       function gen_items() {
-        $.getJSON("gen.json", function(data) {
+        $.getJSON('{{ url }}', function(data) {
           render_data(data);
         });
       }
@@ -64,14 +43,14 @@
         $("#getgen").click(function() {
           gen_items();
         });
-        
       });
     </script>
   </head>
   <body>
     <ul id="navigation">
       <li><a href="/best">Best</a></li>
-      <li><a href="/">Vote</a></li>
+      <li><a href="/tournament">Vote</a></li>
+      <li><a id="new" href="/">New</a></li>
     </ul>
     <a href="/"><img id="logo" src="static/logo.png"></a>
 
