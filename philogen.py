@@ -18,8 +18,8 @@ def sample(items):
 
 
 class PhiloGen:
-    def __init__(self):
-        self.lookback = 2
+    def __init__(self, lookback=2):
+        self.lookback = lookback
         self.markov_map = defaultdict(lambda:defaultdict(int))
         self.titles = []
         
@@ -28,7 +28,11 @@ class PhiloGen:
         for filename in os.listdir(folder):
             with open(folder + filename, 'r') as f:
                 read_data = f.read()
-            self.titles += read_data.split("\n")
+
+            self.titles = list(
+                set(self.titles).union(set(read_data.split("\n"))))
+                
+        print "Titles: {}".format(len(self.titles))
 
         # Generate map in the form:
         # (word1) -> (word2) -> (occurences of word2 after word1)
@@ -47,7 +51,7 @@ class PhiloGen:
             for key in following:
                 following[key] /= total
 
-    def gen(self, num=10):
+    def gen(self, num=8):
         """Generate a number of resolutions"""
         
         sentences = []

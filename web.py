@@ -3,6 +3,7 @@ import sys
 import json
 import logging
 import datetime
+import random
 
 from flask import Flask, render_template, request
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -23,7 +24,7 @@ db = SQLAlchemy(app)
 
 class Resolution(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    resolved = db.Column(db.String(80), unique=True)
+    resolved = db.Column(db.String(500), unique=True)
     score = db.Column(db.Integer)
     created_asof = db.Column(db.DateTime, default=datetime.datetime.utcnow)
     updated_asof = db.Column(db.DateTime,
@@ -36,6 +37,9 @@ class Resolution(db.Model):
 
 db.create_all()
 generator = PhiloGen()
+generator_1 = PhiloGen(1)
+generator_3 = PhiloGen(3)
+
 
 def prune():
     """
@@ -58,8 +62,12 @@ def hello_world():
     return render_template('index.html')
 
 @app.route('/gen.json')
-def gen():
-    return json.dumps(generator.gen(5))
+def gen():    
+    resolutions = generator.gen(6)
+    resolutions += generator_1.gen(1)
+    resolutions += generator_3.gen(1)
+    random.shuffle(resolutions)
+    return json.dumps(resolutions)
     
 @app.route('/like', methods=['POST'])
 def like():
@@ -78,7 +86,7 @@ def like():
     db.session.commit()
     prune()
 
-    return json.dumps(generator.gen(5))
+    return json.dumps(generator.gen())
 
 
 @app.route('/best')
