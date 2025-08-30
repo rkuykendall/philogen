@@ -1,5 +1,8 @@
 venv
 *.db
+.DS_Store
+sources
+sources_unprocessed
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
