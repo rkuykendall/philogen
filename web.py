@@ -50,46 +50,49 @@ generator_1 = PhiloGen(1)
 generator_3 = PhiloGen(3)
 
 
-def prune():
-    """
-    Prune the cached extractions database to keep below 10,000 records,
-    the free limit on Heroku.
-    """
+# Removing likes, as voting has concluded
+# def prune():
+#     """
+#     Prune the cached extractions database to keep below 10,000 records,
+#     the free limit on Heroku.
+#     """
 
-    num = db.session.query(Resolution.id).count()
-    if(num > 9990):
-        for resolution in db.session.query(Resolution
-                ).order_by(Resolution.score.asc(),Resolution.updated_asof.asc()
-                ).limit(40):
+#     num = db.session.query(Resolution.id).count()
+#     if(num > 9990):
+#         for resolution in db.session.query(Resolution
+#                 ).order_by(Resolution.score.asc(),Resolution.updated_asof.asc()
+#                 ).limit(40):
 
-            db.session.delete(resolution)
+#             db.session.delete(resolution)
             
-    db.session.commit()
+#     db.session.commit()
 
 
-def like(resolved):
-    if resolved[:3] == "R: ":
-        resolved = resolved[3:]
+# Removing likes, as voting has concluded
+# def like(resolved):
+#     if resolved[:3] == "R: ":
+#         resolved = resolved[3:]
 
-    r = db.session.query(Resolution).filter_by(resolved=resolved).first()
+#     r = db.session.query(Resolution).filter_by(resolved=resolved).first()
     
-    if r is not None:
-        r.score += 1
-    else:
-        r = Resolution(resolved)
+#     if r is not None:
+#         r.score += 1
+#     else:
+#         r = Resolution(resolved)
         
-    print("Like {}: {}".format(r.score, r.resolved))
+#     print("Like {}: {}".format(r.score, r.resolved))
     
-    db.session.add(r)
-    db.session.commit()
-    prune()
+#     db.session.add(r)
+#     db.session.commit()
+#     prune()
 
 
 # Homepage with randomly generated resolutions
 @app.route('/gen.json', methods=['GET', 'POST'])
 def gen_json():
-    if request.method == 'POST':
-        like(request.form.getlist('R')[0])
+    # Removing likes, as voting has concluded
+    # if request.method == 'POST':
+    #     like(request.form.getlist('R')[0])
 
     resolutions = generator.gen(6)
     resolutions += generator_1.gen(1)
@@ -105,8 +108,9 @@ def gen():
 # Tournoment page with previously-approved resolutions
 @app.route('/tournament.json', methods=['GET', 'POST'])
 def tournament_json():
-    if request.method == 'POST':
-        like(request.form.getlist('R')[0])
+    # Removing likes, as voting has concluded
+    # if request.method == 'POST':
+    #     like(request.form.getlist('R')[0])
 
     query = db.session.query(Resolution
         ).order_by(func.random()
@@ -117,7 +121,6 @@ def tournament_json():
 @app.route('/tournament')
 def tournament():
     return render_template('index.html', url='/tournament.json')
-
 
 # Best of all resolutions
 @app.route('/best')
