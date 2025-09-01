@@ -26,21 +26,22 @@ class PhiloGen:
         # Gather all sources
         folder = 'sources/'
         for filename in os.listdir(folder):
-            with open(folder + filename, 'r') as f:
+            path = os.path.join(folder, filename)
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
                 read_data = f.read()
 
             self.titles = list(
                 set(self.titles).union(set(read_data.split("\n"))))
                 
-        print "Creating generator with {} sources and lookback {}".format(
-            len(self.titles), lookback)
+        print("Creating generator with {} sources and lookback {}".format(
+            len(self.titles), lookback))
 
         # Generate map in the form:
         # (word1) -> (word2) -> (occurences of word2 after word1)
         for title in self.titles[:-1]:
             title = title.split()
             if len(title) > self.lookback:
-                for i in xrange(len(title)+1):
+                for i in range(len(title)+1):
                     word1 = ' '.join(title[max(0, i - self.lookback):i])
                     word2 = ' '.join(title[i:i+1])
                     self.markov_map[word1][word2] += 1
@@ -56,6 +57,7 @@ class PhiloGen:
         """Generate a number of resolutions"""
         
         sentences = []
+        tbl = str.maketrans('', '', string.punctuation)
         while len(sentences) < num:
             sentence = []
             next_word = sample(self.markov_map[''].items())
@@ -66,17 +68,17 @@ class PhiloGen:
                 next_word = sample(word1_map.items())
 
             sentence = ' '.join(sentence)
-            sent_comp = sentence.lower().translate(None, string.punctuation)
+            sent_comp = sentence.lower().translate(tbl)
             flag = True
             for title in self.titles:
                 #Prune titles that are substrings of actual titles
-                title_comp = title.lower().translate(None, string.punctuation)
+                title_comp = title.lower().translate(tbl)
                 if sent_comp in title_comp:
                     flag = False
                     break
             if flag:
                 sentence = sentence.capitalize()
-                if sentence[-1] not in string.punctuation:
+                if sentence and sentence[-1] not in string.punctuation:
                     sentence += '.'
                 sentence = sentence.replace(' i ', ' I ')
                 sentences.append(sentence)

@@ -5,8 +5,8 @@ import logging
 import datetime
 import random
 
-from flask import Flask, render_template, request
-from flask.ext.sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 
 from philogen import PhiloGen
@@ -17,9 +17,16 @@ app.logger.setLevel(logging.ERROR)
 
 
 if 'DATABASE_URL' in os.environ:
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+    uri = os.environ['DATABASE_URL']
+    # Heroku historically provides postgres://, which SQLAlchemy 2.x rejects.
+    if uri.startswith('postgres://'):
+        uri = uri.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+
+# Silence FSADeprecationWarning and reduce overhead
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
@@ -36,7 +43,8 @@ class Resolution(db.Model):
         self.score = 1
         self.resolved = resolved
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 generator = PhiloGen()
 generator_1 = PhiloGen(1)
 generator_3 = PhiloGen(3)
@@ -63,14 +71,14 @@ def like(resolved):
     if resolved[:3] == "R: ":
         resolved = resolved[3:]
 
-    r = Resolution.query.filter_by(resolved=resolved).first()
+    r = db.session.query(Resolution).filter_by(resolved=resolved).first()
     
     if r is not None:
         r.score += 1
     else:
         r = Resolution(resolved)
         
-    print "Like {}: {}".format(r.score, r.resolved)
+    print("Like {}: {}".format(r.score, r.resolved))
     
     db.session.add(r)
     db.session.commit()
@@ -87,7 +95,7 @@ def gen_json():
     resolutions += generator_1.gen(1)
     resolutions += generator_3.gen(1)
     random.shuffle(resolutions)
-    return json.dumps(resolutions)
+    return jsonify(resolutions)
 
 @app.route('/')
 def gen():
@@ -104,7 +112,7 @@ def tournament_json():
         ).order_by(func.random()
         ).limit(10)
     resolutions = [r.resolved for r in query]
-    return json.dumps(resolutions)
+    return jsonify(resolutions)
 
 @app.route('/tournament')
 def tournament():
